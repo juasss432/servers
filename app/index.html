@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Hub - Discover Amazing Servers</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-glow"></div>
+    
+    <div class="background-grid"></div>
+    
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <span class="logo-icon">◆</span>
+                <span class="logo-text">Discord Hub</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">Servers</a>
+                <a href="#" class="nav-link">Popular</a>
+                <a href="#" class="nav-link">New</a>
+                <button class="add-server-btn" id="addServerBtn">+ Add Server</button>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <div class="hero-section">
+            <h1 class="title">
+                <span class="gradient-text">Discover Discord Servers</span>
+            </h1>
+            <p class="subtitle">Find and join amazing communities from around the world</p>
+            
+            <div class="search-bar">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search servers...">
+            </div>
+        </div>
+
+        <div class="categories" id="categories">
+            <div class="category-tag active" data-category="all">All</div>
+            <div class="category-tag" data-category="gaming">Gaming</div>
+            <div class="category-tag" data-category="music">Music</div>
+            <div class="category-tag" data-category="art">Art & Design</div>
+            <div class="category-tag" data-category="tech">Technology</div>
+            <div class="category-tag" data-category="community">Community</div>
+            <div class="category-tag" data-category="education">Education</div>
+            <div class="category-tag" data-category="anime">Anime</div>
+        </div>
+
+        <div class="servers-grid" id="serversGrid">
+            <div class="empty-state">
+                <div class="empty-icon">🌟</div>
+                <div class="empty-text">No Servers Yet</div>
+                <div class="empty-subtext">Be the first to add your Discord server to the hub!</div>
+                <button class="empty-btn" onclick="document.getElementById('addServerBtn').click()">Add Your Server</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Made with <span class="heart">♥</span> by Dealer</p>
+        <p class="disclaimer">This is not an official Discord website. Independent community project.</p>
+    </footer>
+    
+    <div class="modal" id="addServerModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <h2 class="modal-title">Add Your Server</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Server Name *</label>
+                <input type="text" class="form-input" id="serverName" placeholder="My Awesome Server" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Server Icon (Emoji) *</label>
+                <input type="text" class="form-input" id="serverIcon" placeholder="🎮" maxlength="2" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description *</label>
+                <textarea class="form-textarea" id="serverDesc" placeholder="Tell people what makes your server special..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Category *</label>
+                <select class="form-select" id="serverCategory" required>
+                    <option value="">Select a category</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="music">Music</option>
+                    <option value="art">Art & Design</option>
+                    <option value="tech">Technology</option>
+                    <option value="community">Community</option>
+                    <option value="education">Education</option>
+                    <option value="anime">Anime</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Member Count *</label>
+                <input type="number" class="form-input" id="serverMembers" placeholder="1000" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Discord Invite Link *</label>
+                <input type="url" class="form-input" id="serverInvite" placeholder="https://discord.gg/..." required>
+            </div>
+
+            <button class="submit-btn" id="submitServer">Add Server</button>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast">
+        <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="toast-text"></span>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
