@@ -1,18 +1,39 @@
 let servers = [];
 let currentCategory = 'all';
 
-// Load servers from localStorage
-function loadServers() {
-    const saved = localStorage.getItem('discordHubServers');
-    if (saved) {
-        servers = JSON.parse(saved);
+// Load servers from database
+async function loadServers() {
+    try {
+        const response = await fetch('/api/servers');
+        const data = await response.json();
+        servers = data;
+        renderServers();
+    } catch (error) {
+        console.error('Error loading servers:', error);
+        showToast('Failed to load servers');
     }
-    renderServers();
 }
 
-// Save servers to localStorage
-function saveServers() {
-    localStorage.setItem('discordHubServers', JSON.stringify(servers));
+// Save server to database
+async function saveServer(serverData) {
+    try {
+        const response = await fetch('/api/servers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(serverData)
+        });
+        
+        if (!response.ok) throw new Error('Failed to save');
+        
+        const newServer = await response.json();
+        return newServer;
+    } catch (error) {
+        console.error('Error saving server:', error);
+        showToast('Failed to save server');
+        return null;
+    }
 }
 
 // Custom cursor
@@ -75,7 +96,7 @@ function renderServers(serversToRender = servers) {
             </div>
             <div class="server-footer">
                 <div class="server-stats">
-                    <span>📅 ${getTimeAgo(server.addedDate)}</span>
+                    <span>📅 ${getTimeAgo(server.added_date)}</span>
                 </div>
                 <button class="join-btn" data-invite="${server.invite}">Join Server</button>
             </div>
@@ -161,7 +182,7 @@ modal.addEventListener('click', (e) => {
 });
 
 // Submit server
-document.getElementById('submitServer').addEventListener('click', () => {
+document.getElementById('submitServer').addEventListener('click', async () => {
     const name = document.getElementById('serverName').value.trim();
     const icon = document.getElementById('serverIcon').value.trim() || '◆';
     const desc = document.getElementById('serverDesc').value.trim();
@@ -187,24 +208,31 @@ document.getElementById('submitServer').addEventListener('click', () => {
         description: desc,
         category,
         tags: ['New'],
-        invite,
-        addedDate: new Date().toISOString()
+        invite
     };
 
-    servers.unshift(newServer);
-    saveServers();
-    renderServers(currentCategory === 'all' ? servers : servers.filter(s => s.category === currentCategory));
-    
-    modal.classList.remove('show');
-    showToast('Server added successfully! 🎉');
+    const submitBtn = document.getElementById('submitServer');
+    submitBtn.textContent = 'Adding...';
+    submitBtn.disabled = true;
 
-    // Clear form
-    document.getElementById('serverName').value = '';
-    document.getElementById('serverIcon').value = '';
-    document.getElementById('serverDesc').value = '';
-    document.getElementById('serverCategory').value = '';
-    document.getElementById('serverMembers').value = '';
-    document.getElementById('serverInvite').value = '';
+    const saved = await saveServer(newServer);
+    
+    if (saved) {
+        await loadServers();
+        modal.classList.remove('show');
+        showToast('Server added successfully! 🎉');
+
+        // Clear form
+        document.getElementById('serverName').value = '';
+        document.getElementById('serverIcon').value = '';
+        document.getElementById('serverDesc').value = '';
+        document.getElementById('serverCategory').value = '';
+        document.getElementById('serverMembers').value = '';
+        document.getElementById('serverInvite').value = '';
+    }
+
+    submitBtn.textContent = 'Add Server';
+    submitBtn.disabled = false;
 });
 
 // Toast notification
